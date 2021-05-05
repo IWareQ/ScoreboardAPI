@@ -1,0 +1,5 @@
+name: Scoreboard
+main: ru.jl1mbo.scoreboard.Scoreboard
+version: "${pom.version}"
+api: "1.0.11"
+author: Jl1mbo
