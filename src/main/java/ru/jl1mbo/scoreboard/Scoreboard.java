@@ -9,12 +9,12 @@ public class Scoreboard extends PluginBase {
 	@Override()
 	public void onEnable() {
 		instance = this;
-		this.getLogger().info("§6Scoreboard §aАктивирован§7!");
+		this.getLogger().info("§6Scoreboard §aактивтрован§7!");
 	}
 
 	@Override()
 	public void onDisable() {
-		this.getLogger().info("§6Scoreboard §cДеактивирован§7!");
+		this.getLogger().info("§6Scoreboard §cдеактивирован§7!");
 	}
 
 	public static Scoreboard getInstance() {

@@ -1,16 +1,33 @@
 package ru.jl1mbo.scoreboard;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 import cn.nukkit.Player;
+import cn.nukkit.network.protocol.DataPacket;
+import ru.jl1mbo.scoreboard.line.ScoreboardLine;
+import ru.jl1mbo.scoreboard.manager.ScoreboardManager;
 import ru.jl1mbo.scoreboard.objective.ScoreboardObjective;
+import ru.jl1mbo.scoreboard.packet.SetScorePacket;
 import ru.jl1mbo.scoreboard.utils.DisplaySlot;
 import ru.jl1mbo.scoreboard.utils.SortOrder;
 
 public class ScoreboardBuilder {
 
-	private ScoreboardDisplay scoreboardDisplay;
+	private final Map<Integer, ScoreboardLine> scoreboardLines = new HashMap<>();
+	private final Set<Player> players = new HashSet<>();
+	private ScoreboardObjective scoreboardObjective;
 
-	public ScoreboardBuilder() {
-		this.scoreboardDisplay = new ScoreboardDisplay();
+	public Set<Player> getPlayers() {
+		return this.players;
+	}
+
+	public void broadcastPacket(DataPacket dataPacket) {
+		for (Player player : this.players) {
+			player.dataPacket(dataPacket);
+		}
 	}
 
 	public ScoreboardBuilder setDisplayName(String objectiveName, String displayName) {
@@ -24,17 +41,35 @@ public class ScoreboardBuilder {
 	}
 
 	public ScoreboardBuilder setDisplayName(DisplaySlot displaySlot, String objectiveName, String displayName, SortOrder sortOrder) {
-		this.scoreboardDisplay.setObjective(new ScoreboardObjective(objectiveName, displayName));
-		this.scoreboardDisplay.setDisplayName(displaySlot, objectiveName, displayName, sortOrder);
+		this.scoreboardObjective = new ScoreboardObjective(objectiveName, displayName);
+		this.scoreboardObjective.setDisplayName(displaySlot, objectiveName, displayName, sortOrder, this);
 		return this;
 	}
 
+	public ScoreboardObjective getObjective() {
+		return this.scoreboardObjective;
+	}
+
 	public ScoreboardBuilder setLine(int index, String text) {
-		if(index > 15 || index < 1){
+		if (index > 15 || index < 1) {
 			index = 1;
 		}
-		this.scoreboardDisplay.setLine(index, text);
+		ScoreboardLine scoreboardLine = this.getLine(index);
+
+		if (scoreboardLine == null) {
+			this.scoreboardLines.put(index, new ScoreboardLine(index, text, this));
+		} else {
+			scoreboardLine.setText(text);
+		}
 		return this;
+	}
+
+	public ScoreboardLine getLine(int index) {
+		return this.scoreboardLines.getOrDefault(index, null);
+	}
+
+	public Map<Integer, ScoreboardLine> getLines() {
+		return this.scoreboardLines;
 	}
 
 	//TODO
@@ -44,10 +79,24 @@ public class ScoreboardBuilder {
 	}*/
 
 	public void showFor(Player player) {
-		this.scoreboardDisplay.show(player);
+		if (this.players.add(player)) {
+			this.scoreboardObjective.create(player);
+			this.scoreboardLines.values().forEach(scoreboardLine -> {
+				player.dataPacket(scoreboardLine.getScorePacket(SetScorePacket.TYPE_CHANGE));
+			});
+			ScoreboardManager.scoreboards.put(player, this);
+		}
 	}
 
 	public void hideFor(Player player) {
-		this.scoreboardDisplay.hide(player);
+		this.scoreboardObjective.remove(player);
+		this.players.remove(player);
+	}
+
+	public void hideAll() {
+		for (Player player : this.players) {
+			this.scoreboardObjective.remove(player);
+			this.players.remove(player);
+		}
 	}
 }

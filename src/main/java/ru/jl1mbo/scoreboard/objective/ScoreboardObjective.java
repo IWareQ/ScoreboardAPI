@@ -2,7 +2,7 @@ package ru.jl1mbo.scoreboard.objective;
 
 import cn.nukkit.Player;
 import cn.nukkit.network.protocol.DataPacket;
-import ru.jl1mbo.scoreboard.ScoreboardDisplay;
+import ru.jl1mbo.scoreboard.ScoreboardBuilder;
 import ru.jl1mbo.scoreboard.packet.RemoveObjectivePacket;
 import ru.jl1mbo.scoreboard.packet.SetObjectivePacket;
 import ru.jl1mbo.scoreboard.utils.DisplaySlot;
@@ -18,7 +18,7 @@ public class ScoreboardObjective {
 		this.displayName = displayName;
 	}
 
-	public void setDisplayName(DisplaySlot displaySlot, String objectiveName, String displayName, SortOrder sortOrder, ScoreboardDisplay scoreboardDisplay) {
+	public void setDisplayName(DisplaySlot displaySlot, String objectiveName, String displayName, SortOrder sortOrder, ScoreboardBuilder scoreboardBuilder) {
 		this.displayName = displayName;
 		this.objectiveName = objectiveName;
 
@@ -28,7 +28,7 @@ public class ScoreboardObjective {
 		setObjectivePacket.displayName = displayName;
 		setObjectivePacket.criteriaName = "dummy";
 		setObjectivePacket.sortOrder = sortOrder.ordinal();
-		scoreboardDisplay.broadcastPacket(setObjectivePacket);
+		scoreboardBuilder.broadcastPacket(setObjectivePacket);
 	}
 
 	public String getObjectiveName() {
