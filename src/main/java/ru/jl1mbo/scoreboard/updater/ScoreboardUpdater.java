@@ -1,72 +1,71 @@
 package ru.jl1mbo.scoreboard.updater;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Consumer;
+
+import ru.jl1mbo.scoreboard.ScoreboardBuilder;
+
 public class ScoreboardUpdater {
-	/*
-		private ScoreboardDisplay scoreboardDisplay;
 
-		private Map<Integer, Consumer<ScoreboardDisplay>> tasks;
+	private Map<Long, Consumer<ScoreboardBuilder>> tasks;
+	private ScoreboardBuilder scoreboardBuilder;
+	private boolean isStarting = false;
+	private Thread thread;
 
-		private Thread thread;
+	public ScoreboardUpdater(ScoreboardBuilder scoreboardBuilder) {
+		this.scoreboardBuilder = scoreboardBuilder;
+		this.tasks = new HashMap<>();
+	}
 
-		private boolean started;
+	public Map<Long, Consumer<ScoreboardBuilder>> getTasks() {
+		return this.tasks;
+	}
 
-		public ScoreboardUpdater(ScoreboardDisplay scoreboardDisplay) {
-			this.scoreboardDisplay = scoreboardDisplay;
-			this.tasks = new HashMap<>();
+	public ScoreboardBuilder getScoreboardBuilder() {
+		return this.scoreboardBuilder;
+	}
+
+	public ScoreboardBuilder addUpdater(Consumer<ScoreboardBuilder> task, long delay) {
+		if (delay <= 0L) {
+			throw new IllegalArgumentException("Delay value must be > 0. \n Значение задержки должно быть > 0.");
 		}
+		this.tasks.put(delay, task);
+		return this.scoreboardBuilder;
+	}
 
-		public ScoreboardDisplay getScoreboardDisplay() {
-			return this.scoreboardDisplay;
-		}
-
-		public Map<Integer, Consumer<ScoreboardDisplay>> getTasks() {
-			return this.tasks;
-		}
-
-		public void clearTasks() {
-			this.tasks.clear();
-		}
-
-		public void stop() {
-			this.thread.interrupt();
-			if (!this.thread.isInterrupted()) {
-				this.thread.stop();
-			}
-		}
-
-		public ScoreboardUpdater addUpdater(Consumer<ScoreboardDisplay> task, int delay) {
-			if (delay <= 0) {
-				throw new IllegalArgumentException("Delay value must be > 0");
-			}
-			this.tasks.put(delay, task);
-			return this;
-		}
-
-		public void start() {
-			startTaskExecution();
-			this.started = true;
-		}
-
-		private void startTaskExecution() {
-			AtomicLong time = new AtomicLong();
+	public void start() {
+		if (!this.isStarting) {
+			AtomicLong atomicLong = new AtomicLong();
 
 			Runnable updater = () -> {
 				while (!Thread.interrupted()) {
 					try {
 						Thread.sleep(50L);
 					} catch (InterruptedException ignored) {
+
 					}
 
-					tasks.entrySet()
-					.stream()
-					.filter(entry -> time.get() % entry.getKey() == 0)
-					.forEach(entry -> ((Map<Integer, Consumer<ScoreboardDisplay>>) entry.getValue()).forEach(consumer -> consumer.accept(scoreboardDisplay)));
+					this.tasks.entrySet().stream()
+					.filter(entry -> atomicLong.get() % entry.getKey() == 0)
+					.forEach(entry -> entry.getValue().accept(this.scoreboardBuilder));
 
-					time.incrementAndGet();
+					atomicLong.incrementAndGet();
 				}
 			};
-			executionThread = new Thread(updater, String.format("%s-Updater", scoreboardDisplay.getObjective().getName()));
-			executionThread.start();
+			this.thread = new Thread(updater, String.format("%s-Updater", this.scoreboardBuilder.getObjective().getDisplayName()));
+			this.thread.start();
+			this.isStarting = true;
 		}
-	*/
+	}
+
+	public void stop() {
+		if (this.isStarting) {
+			this.thread.interrupt();
+			if (!this.thread.isInterrupted()) {
+				this.thread.stop();
+			}
+		}
+	}
 }

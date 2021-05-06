@@ -9,6 +9,7 @@ public class Scoreboard extends PluginBase {
 	@Override()
 	public void onEnable() {
 		instance = this;
+		this.getServer().getPluginManager().registerEvents(new ScoreboardListener(), this);
 		this.getLogger().info("§6Scoreboard §aактивтрован§7!");
 	}
 
