@@ -12,23 +12,19 @@ public class ScoreboardObjective {
 
 	private String objectiveName;
 	private String displayName;
+	private ScoreboardBuilder scoreboardBuilder;
 
-	public ScoreboardObjective(String objectiveName, String displayName) {
+	public ScoreboardObjective(String objectiveName, String displayName, ScoreboardBuilder scoreboardBuilder) {
 		this.objectiveName = objectiveName;
 		this.displayName = displayName;
+		this.scoreboardBuilder = scoreboardBuilder;
 	}
 
-	public void setDisplayName(DisplaySlot displaySlot, String objectiveName, String displayName, SortOrder sortOrder, ScoreboardBuilder scoreboardBuilder) {
+	public void setDisplayName(DisplaySlot displaySlot, String objectiveName, String displayName, SortOrder sortOrder) {
 		this.displayName = displayName;
 		this.objectiveName = objectiveName;
 
-		SetObjectivePacket setObjectivePacket = new SetObjectivePacket();
-		setObjectivePacket.displaySlot = displaySlot.name().toLowerCase();
-		setObjectivePacket.objectiveName = objectiveName;
-		setObjectivePacket.displayName = displayName;
-		setObjectivePacket.criteriaName = "dummy";
-		setObjectivePacket.sortOrder = sortOrder.ordinal();
-		scoreboardBuilder.broadcastPacket(setObjectivePacket);
+		scoreboardBuilder.broadcastPacket(this.getSetObjectivePacket(displaySlot, objectiveName, displayName, sortOrder));
 	}
 
 	public String getObjectiveName() {
@@ -40,13 +36,11 @@ public class ScoreboardObjective {
 	}
 
 	public void create(Player player) {
-		DataPacket packet = this.getSetObjectivePacket(this.objectiveName, this.displayName);
-		player.dataPacket(packet);
+		player.dataPacket(this.getSetObjectivePacket(this.objectiveName, this.displayName));
 	}
 
 	public void remove(Player player) {
-		DataPacket packet = this.getRemoveObjectivePacket(this.objectiveName);
-		player.dataPacket(packet);
+		player.dataPacket(this.getRemoveObjectivePacket(this.objectiveName));
 	}
 
 	public DataPacket getSetObjectivePacket(String objectiveName, String displayName) {

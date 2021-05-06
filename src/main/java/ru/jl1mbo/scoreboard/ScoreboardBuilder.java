@@ -41,8 +41,8 @@ public class ScoreboardBuilder {
 	}
 
 	public ScoreboardBuilder setDisplayName(DisplaySlot displaySlot, String objectiveName, String displayName, SortOrder sortOrder) {
-		this.scoreboardObjective = new ScoreboardObjective(objectiveName, displayName);
-		this.scoreboardObjective.setDisplayName(displaySlot, objectiveName, displayName, sortOrder, this);
+		this.scoreboardObjective = new ScoreboardObjective(objectiveName, displayName, this);
+		this.scoreboardObjective.setDisplayName(displaySlot, objectiveName, displayName, sortOrder);
 		return this;
 	}
 
@@ -64,8 +64,21 @@ public class ScoreboardBuilder {
 		return this;
 	}
 
+	public ScoreboardBuilder removeLine(int index) {
+		if (index > 15 || index < 1) {
+			index = 1;
+		}
+		ScoreboardLine scoreboardLine = this.getLine(index);
+
+		if (scoreboardLine != null) {
+			scoreboardLine.hideLine();
+			this.scoreboardLines.remove(index);
+		}
+		return this;
+	}
+
 	public ScoreboardLine getLine(int index) {
-		return this.scoreboardLines.getOrDefault(index, null);
+		return this.scoreboardLines.get(index);
 	}
 
 	public Map<Integer, ScoreboardLine> getLines() {
@@ -82,21 +95,23 @@ public class ScoreboardBuilder {
 		if (this.players.add(player)) {
 			this.scoreboardObjective.create(player);
 			this.scoreboardLines.values().forEach(scoreboardLine -> {
-				player.dataPacket(scoreboardLine.getScorePacket(SetScorePacket.TYPE_CHANGE));
+				player.dataPacket(scoreboardLine.getSetScorePacket(SetScorePacket.TYPE_CHANGE));
 			});
 			ScoreboardManager.scoreboards.put(player, this);
 		}
 	}
 
 	public void hideFor(Player player) {
-		this.scoreboardObjective.remove(player);
-		this.players.remove(player);
+		if (this.players.remove(player)) {
+			this.scoreboardObjective.remove(player);
+		}
 	}
 
 	public void hideAll() {
 		for (Player player : this.players) {
-			this.scoreboardObjective.remove(player);
-			this.players.remove(player);
+			if (this.players.remove(player)) {
+				this.scoreboardObjective.remove(player);
+			}
 		}
 	}
 }

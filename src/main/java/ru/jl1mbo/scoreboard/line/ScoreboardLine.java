@@ -41,14 +41,14 @@ public class ScoreboardLine {
 	}
 
 	public void hideLine() {
-		this.scoreboardBuilder.broadcastPacket(this.getScorePacket(SetScorePacket.TYPE_REMOVE));
+		this.scoreboardBuilder.broadcastPacket(this.getSetScorePacket(SetScorePacket.TYPE_REMOVE));
 	}
 
 	public void showLine() {
-		this.scoreboardBuilder.broadcastPacket(this.getScorePacket(SetScorePacket.TYPE_CHANGE));
+		this.scoreboardBuilder.broadcastPacket(this.getSetScorePacket(SetScorePacket.TYPE_CHANGE));
 	}
 
-	public DataPacket getScorePacket(int action) {
+	public DataPacket getSetScorePacket(int action) {
 		SetScorePacket setScorePacket = new SetScorePacket();
 		setScorePacket.type = (byte) action;
 		List<ScoreEntry> entries = new ArrayList<>();
