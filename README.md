@@ -1,5 +1,3 @@
-# How to use | Как использовать:
-
 How to create Scoreboard | Как создать Scoreboard:
 ----------------
 ```java
