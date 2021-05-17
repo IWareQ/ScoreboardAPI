@@ -4,29 +4,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.nukkit.network.protocol.DataPacket;
+import ru.jl1mbo.scoreboard.packet.entry.ScoreEntry;
 
 public class SetScorePacket extends DataPacket {
 
-	public static int TYPE_CHANGE = 0;
-	public static int TYPE_REMOVE = 1;
-	
-	public final int TYPE_PLAYER = 1;
-	public final int TYPE_ENTITY = 2;
-	public final int TYPE_FAKE_PLAYER = 3;
+	public static int TYPE_CHANGE = 0,
+					  TYPE_REMOVE = 1;
+
+	public final int TYPE_PLAYER = 1,
+					 TYPE_ENTITY = 2,
+					 TYPE_FAKE_PLAYER = 3;
 
 	public byte type;
 	public List<ScoreEntry> entries = new ArrayList<>();
-	
+
 	@Override
 	public byte pid() {
 		return 0x6c;
 	}
-	
+
 	@Override
-	public void decode() {
-		
-	}
-	
+	public void decode() {/**/}
+
 	@Override
 	public void encode() {
 		this.reset();
@@ -34,7 +33,7 @@ public class SetScorePacket extends DataPacket {
 		this.putUnsignedVarInt(this.entries.size());
 		for (ScoreEntry entry : this.entries) {
 			this.putVarLong(entry.scoreboardId);
-			this.putString(entry.objectiveName);
+			this.putString("objective");
 			this.putLInt(entry.score);
 			if (this.type != TYPE_REMOVE) {
 				this.putByte((byte) entry.type);
@@ -43,11 +42,9 @@ public class SetScorePacket extends DataPacket {
 				case TYPE_ENTITY:
 					this.putUnsignedVarLong(entry.entityUniqueId);
 					break;
-
 				case TYPE_FAKE_PLAYER:
 					this.putString(entry.customName);
 					break;
-
 				default:
 					throw new IllegalArgumentException("Unknown entry " + entry.type);
 				}

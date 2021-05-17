@@ -8,17 +8,25 @@ import ru.jl1mbo.scoreboard.ScoreboardBuilder;
 
 public class ScoreboardManager {
 
-	public static final Map<Player, ScoreboardBuilder> scoreboards = new HashMap<>();
+	private static final Map<String, ScoreboardBuilder> SCOREBOARDS = new HashMap<>();
 
-	public static ScoreboardBuilder createScoreboard() {
-		return new ScoreboardBuilder();
+	public static ScoreboardBuilder createScoreboard(Player player) {
+		return new ScoreboardBuilder(player);
 	}
 
-	public static Map<Player, ScoreboardBuilder> getScoreboards() {
-		return scoreboards;
+	public static Map<String, ScoreboardBuilder> getScoreboards() {
+		return SCOREBOARDS;
 	}
 
 	public static ScoreboardBuilder getScoreboard(Player player) {
-		return scoreboards.getOrDefault(player, null);
+		return SCOREBOARDS.getOrDefault(player.getName().toLowerCase(), null);
+	}
+
+	public static void putScoreboard(Player player, ScoreboardBuilder scoreboardBuilder) {
+		SCOREBOARDS.put(player.getName().toLowerCase(), scoreboardBuilder);
+	}
+
+	public static void removeScoreboard(Player player) {
+		SCOREBOARDS.remove(player.getName().toLowerCase());
 	}
 }

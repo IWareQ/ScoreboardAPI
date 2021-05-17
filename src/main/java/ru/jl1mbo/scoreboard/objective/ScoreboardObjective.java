@@ -2,64 +2,58 @@ package ru.jl1mbo.scoreboard.objective;
 
 import cn.nukkit.Player;
 import cn.nukkit.network.protocol.DataPacket;
-import ru.jl1mbo.scoreboard.ScoreboardBuilder;
 import ru.jl1mbo.scoreboard.packet.RemoveObjectivePacket;
 import ru.jl1mbo.scoreboard.packet.SetObjectivePacket;
-import ru.jl1mbo.scoreboard.utils.DisplaySlot;
-import ru.jl1mbo.scoreboard.utils.SortOrder;
+import ru.jl1mbo.scoreboard.types.SortOrder;
 
 public class ScoreboardObjective {
 
-	private String objectiveName;
 	private String displayName;
-	private ScoreboardBuilder scoreboardBuilder;
+	private final Player player;
 
-	public ScoreboardObjective(String objectiveName, String displayName, ScoreboardBuilder scoreboardBuilder) {
-		this.objectiveName = objectiveName;
+	public ScoreboardObjective(String displayName, Player player) {
 		this.displayName = displayName;
-		this.scoreboardBuilder = scoreboardBuilder;
+		this.player = player;
 	}
 
-	public void setDisplayName(DisplaySlot displaySlot, String objectiveName, String displayName, SortOrder sortOrder) {
+	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
-		this.objectiveName = objectiveName;
-
-		scoreboardBuilder.broadcastPacket(this.getSetObjectivePacket(displaySlot, objectiveName, displayName, sortOrder));
-	}
-
-	public String getObjectiveName() {
-		return this.objectiveName;
+		player.dataPacket(this.getSetObjectivePacket(displayName));
 	}
 
 	public String getDisplayName() {
 		return this.displayName;
 	}
 
-	public void create(Player player) {
-		player.dataPacket(this.getSetObjectivePacket(this.objectiveName, this.displayName));
+	public Player getPlayer() {
+		return this.player;
 	}
 
-	public void remove(Player player) {
-		player.dataPacket(this.getRemoveObjectivePacket(this.objectiveName));
+	public void create() {
+		player.dataPacket(this.getSetObjectivePacket(this.displayName));
 	}
 
-	public DataPacket getSetObjectivePacket(String objectiveName, String displayName) {
-		return this.getSetObjectivePacket(DisplaySlot.SIDEBAR, objectiveName, displayName, SortOrder.ASCENDING);
+	public void remove() {
+		player.dataPacket(this.getRemoveObjectivePacket());
 	}
 
-	public DataPacket getSetObjectivePacket(DisplaySlot displaySlot, String objectiveName, String displayName, SortOrder sortOrder) {
+	public DataPacket getSetObjectivePacket(String displayName) {
+		return this.getSetObjectivePacket(displayName, SortOrder.ASCENDING);
+	}
+
+	public DataPacket getSetObjectivePacket(String displayName, SortOrder sortOrder) {
 		SetObjectivePacket setObjectivePacket = new SetObjectivePacket();
-		setObjectivePacket.displaySlot = displaySlot.name().toLowerCase();
-		setObjectivePacket.objectiveName = objectiveName;
+		setObjectivePacket.displaySlot = "sidebar";
+		setObjectivePacket.objectiveName = "objective";
 		setObjectivePacket.displayName = displayName;
 		setObjectivePacket.criteriaName = "dummy";
 		setObjectivePacket.sortOrder = sortOrder.ordinal();
 		return setObjectivePacket;
 	}
 
-	public DataPacket getRemoveObjectivePacket(String objectiveName) {
+	public DataPacket getRemoveObjectivePacket() {
 		RemoveObjectivePacket removeObjectivePacket = new RemoveObjectivePacket();
-		removeObjectivePacket.objectiveName = objectiveName;
+		removeObjectivePacket.objectiveName = "objective";
 		return removeObjectivePacket;
 	}
 }

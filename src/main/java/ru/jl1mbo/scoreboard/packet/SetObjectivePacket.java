@@ -4,10 +4,7 @@ import cn.nukkit.network.protocol.DataPacket;
 
 public class SetObjectivePacket extends DataPacket {
 
-	public String displaySlot;
-	public String objectiveName;
-	public String displayName;
-	public String criteriaName;
+	public String displaySlot, objectiveName, displayName, criteriaName;
 	public int sortOrder;
 
 	@Override
@@ -16,9 +13,7 @@ public class SetObjectivePacket extends DataPacket {
 	}
 
 	@Override
-	public void decode() {
-
-	}
+	public void decode() {/**/}
 
 	@Override
 	public void encode() {
