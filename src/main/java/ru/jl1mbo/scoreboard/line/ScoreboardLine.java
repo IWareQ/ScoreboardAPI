@@ -1,46 +1,46 @@
 package ru.jl1mbo.scoreboard.line;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map.Entry;
-
 import cn.nukkit.network.protocol.DataPacket;
 import ru.jl1mbo.scoreboard.ScoreboardBuilder;
 import ru.jl1mbo.scoreboard.packet.SetScorePacket;
 import ru.jl1mbo.scoreboard.packet.entry.ScoreEntry;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map.Entry;
+
 public class ScoreboardLine {
 
+	private final ScoreboardBuilder scoreboardBuilder;
 	private int index;
 	private String text;
-	private final ScoreboardBuilder scoreboardBuilder;
 
-	public ScoreboardLine(int index, String text, ScoreboardBuilder scoreboardBuilder) {
+	public ScoreboardLine(ScoreboardBuilder scoreboardBuilder, int index, String text) {
+		this.scoreboardBuilder = scoreboardBuilder;
 		this.index = index;
 		this.text = text;
-		this.scoreboardBuilder = scoreboardBuilder;
-		this.reflesh();
-	}
-
-	public void setText(String text) {
-		this.text = text;
-		this.reflesh();
+		this.refresh();
 	}
 
 	public String getText() {
 		return this.text;
 	}
 
-	public void setIndex(int index) {
-		this.index = index;
-		this.reflesh();
+	public void setText(String text) {
+		this.text = text;
+		this.refresh();
 	}
 
 	public int getIndex() {
 		return this.index;
 	}
-	
-	public void reflesh() {
+
+	public void setIndex(int index) {
+		this.index = index;
+		this.refresh();
+	}
+
+	public void refresh() {
 		this.hideLine();
 		this.showLine();
 	}

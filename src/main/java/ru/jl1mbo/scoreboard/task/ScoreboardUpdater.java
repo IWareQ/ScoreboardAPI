@@ -1,19 +1,19 @@
 package ru.jl1mbo.scoreboard.task;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
-
 import cn.nukkit.Server;
 import cn.nukkit.scheduler.AsyncTask;
 import ru.jl1mbo.scoreboard.Scoreboard;
 import ru.jl1mbo.scoreboard.ScoreboardBuilder;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
+
 public class ScoreboardUpdater extends AsyncTask {
 
-	private Map<Integer, Consumer<ScoreboardBuilder>> TASKS;
 	private final ScoreboardBuilder scoreboardBuilder;
+	private final Map<Integer, Consumer<ScoreboardBuilder>> TASKS;
 	private int time;
 	private boolean starting;
 
@@ -48,9 +48,7 @@ public class ScoreboardUpdater extends AsyncTask {
 		if (this.starting) {
 			if (this.scoreboardBuilder.getPlayer().spawned) {
 				CompletableFuture.runAsync(() -> {
-					this.TASKS.entrySet().stream()
-					.filter(entry -> this.time % entry.getKey() == 0)
-					.forEach(entry -> {
+					this.TASKS.entrySet().stream().filter(entry -> this.time % entry.getKey() == 0).forEach(entry -> {
 						entry.getValue().accept(this.scoreboardBuilder);
 						this.time = 0;
 					});

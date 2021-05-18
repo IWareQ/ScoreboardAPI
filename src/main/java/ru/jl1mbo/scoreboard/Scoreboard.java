@@ -11,14 +11,14 @@ public class Scoreboard extends PluginBase implements Listener {
 
 	private static Scoreboard instance;
 
+	public static Scoreboard getInstance() {
+		return instance;
+	}
+
 	@Override()
 	public void onEnable() {
 		instance = this;
 		this.getServer().getPluginManager().registerEvents(this, this);
-	}
-
-	public static Scoreboard getInstance() {
-		return instance;
 	}
 
 	@EventHandler

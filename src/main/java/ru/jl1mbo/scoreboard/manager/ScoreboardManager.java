@@ -1,10 +1,10 @@
 package ru.jl1mbo.scoreboard.manager;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import cn.nukkit.Player;
 import ru.jl1mbo.scoreboard.ScoreboardBuilder;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ScoreboardManager {
 

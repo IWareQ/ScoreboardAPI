@@ -1,9 +1,5 @@
 package ru.jl1mbo.scoreboard;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Consumer;
-
 import cn.nukkit.Player;
 import ru.jl1mbo.scoreboard.line.ScoreboardLine;
 import ru.jl1mbo.scoreboard.manager.ScoreboardManager;
@@ -11,12 +7,16 @@ import ru.jl1mbo.scoreboard.objective.ScoreboardObjective;
 import ru.jl1mbo.scoreboard.packet.SetScorePacket;
 import ru.jl1mbo.scoreboard.task.ScoreboardUpdater;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Consumer;
+
 public class ScoreboardBuilder {
 
 	private final Map<Integer, ScoreboardLine> scoreboardLines = new HashMap<>();
 	private final ScoreboardUpdater scoreboardUpdater;
-	private ScoreboardObjective scoreboardObjective;
 	private final Player player;
+	private ScoreboardObjective scoreboardObjective;
 
 	public ScoreboardBuilder(Player player) {
 		this.scoreboardUpdater = new ScoreboardUpdater(this);
@@ -24,7 +24,7 @@ public class ScoreboardBuilder {
 	}
 
 	public ScoreboardBuilder setDisplayName(String displayName) {
-		this.scoreboardObjective = new ScoreboardObjective(displayName, this.player);
+		this.scoreboardObjective = new ScoreboardObjective(this.player, displayName);
 		this.scoreboardObjective.setDisplayName(displayName);
 		return this;
 	}
@@ -39,7 +39,7 @@ public class ScoreboardBuilder {
 		}
 		ScoreboardLine scoreboardLine = this.getLine(index);
 		if (scoreboardLine == null) {
-			this.scoreboardLines.put(index, new ScoreboardLine(index, text, this));
+			this.scoreboardLines.put(index, new ScoreboardLine(this, index, text));
 		} else {
 			scoreboardLine.setText(text);
 		}

@@ -8,21 +8,21 @@ import ru.jl1mbo.scoreboard.types.SortOrder;
 
 public class ScoreboardObjective {
 
-	private String displayName;
 	private final Player player;
+	private String displayName;
 
-	public ScoreboardObjective(String displayName, Player player) {
-		this.displayName = displayName;
+	public ScoreboardObjective(Player player, String displayName) {
 		this.player = player;
+		this.displayName = displayName;
+	}
+
+	public String getDisplayName() {
+		return this.displayName;
 	}
 
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
 		player.dataPacket(this.getSetObjectivePacket(displayName));
-	}
-
-	public String getDisplayName() {
-		return this.displayName;
 	}
 
 	public Player getPlayer() {

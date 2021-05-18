@@ -2,9 +2,10 @@ package ru.jl1mbo.scoreboard.packet.entry;
 
 public class ScoreEntry {
 
-	public static final int TYPE_PLAYER = 1,
-							TYPE_ENTITY = 2,
-							TYPE_FAKE_PLAYER = 3;
+	public static final int
+			TYPE_PLAYER = 1,
+			TYPE_ENTITY = 2,
+			TYPE_FAKE_PLAYER = 3;
 
 	public int scoreboardId, score, type, entityUniqueId;
 

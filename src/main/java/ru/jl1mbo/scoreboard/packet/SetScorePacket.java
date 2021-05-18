@@ -1,19 +1,21 @@
 package ru.jl1mbo.scoreboard.packet;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import cn.nukkit.network.protocol.DataPacket;
 import ru.jl1mbo.scoreboard.packet.entry.ScoreEntry;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SetScorePacket extends DataPacket {
 
-	public static int TYPE_CHANGE = 0,
-					  TYPE_REMOVE = 1;
+	public static int
+			TYPE_CHANGE = 0,
+			TYPE_REMOVE = 1;
 
-	public final int TYPE_PLAYER = 1,
-					 TYPE_ENTITY = 2,
-					 TYPE_FAKE_PLAYER = 3;
+	public final int
+			TYPE_PLAYER = 1,
+			TYPE_ENTITY = 2,
+			TYPE_FAKE_PLAYER = 3;
 
 	public byte type;
 	public List<ScoreEntry> entries = new ArrayList<>();
@@ -38,15 +40,15 @@ public class SetScorePacket extends DataPacket {
 			if (this.type != TYPE_REMOVE) {
 				this.putByte((byte) entry.type);
 				switch (entry.type) {
-				case TYPE_PLAYER:
-				case TYPE_ENTITY:
-					this.putUnsignedVarLong(entry.entityUniqueId);
-					break;
-				case TYPE_FAKE_PLAYER:
-					this.putString(entry.customName);
-					break;
-				default:
-					throw new IllegalArgumentException("Unknown entry " + entry.type);
+					case TYPE_PLAYER:
+					case TYPE_ENTITY:
+						this.putUnsignedVarLong(entry.entityUniqueId);
+						break;
+					case TYPE_FAKE_PLAYER:
+						this.putString(entry.customName);
+						break;
+					default:
+						throw new IllegalArgumentException("Unknown entry " + entry.type);
 				}
 			}
 		}
