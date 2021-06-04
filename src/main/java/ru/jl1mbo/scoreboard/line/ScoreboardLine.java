@@ -1,6 +1,7 @@
 package ru.jl1mbo.scoreboard.line;
 
 import cn.nukkit.network.protocol.DataPacket;
+import lombok.Getter;
 import ru.jl1mbo.scoreboard.ScoreboardBuilder;
 import ru.jl1mbo.scoreboard.packet.SetScorePacket;
 import ru.jl1mbo.scoreboard.packet.entry.ScoreEntry;
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
+@Getter
 public class ScoreboardLine {
 
 	private final ScoreboardBuilder scoreboardBuilder;
@@ -22,17 +24,9 @@ public class ScoreboardLine {
 		this.refresh();
 	}
 
-	public String getText() {
-		return this.text;
-	}
-
 	public void setText(String text) {
 		this.text = text;
 		this.refresh();
-	}
-
-	public int getIndex() {
-		return this.index;
 	}
 
 	public void setIndex(int index) {
@@ -57,7 +51,7 @@ public class ScoreboardLine {
 		SetScorePacket setScorePacket = new SetScorePacket();
 		setScorePacket.type = (byte) type;
 		List<ScoreEntry> entries = new ArrayList<>();
-		for (Entry<Integer, ScoreboardLine> entry : this.scoreboardBuilder.getLines().entrySet()) {
+		for (Entry<Integer, ScoreboardLine> entry : this.scoreboardBuilder.getScoreboardLines().entrySet()) {
 			entries.add(new ScoreEntry(entry.getKey(), entry.getKey(), ScoreEntry.TYPE_FAKE_PLAYER, 0, entry.getValue().getText()));
 		}
 		setScorePacket.entries = entries;

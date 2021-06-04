@@ -2,10 +2,12 @@ package ru.jl1mbo.scoreboard.objective;
 
 import cn.nukkit.Player;
 import cn.nukkit.network.protocol.DataPacket;
+import lombok.Getter;
 import ru.jl1mbo.scoreboard.packet.RemoveObjectivePacket;
 import ru.jl1mbo.scoreboard.packet.SetObjectivePacket;
 import ru.jl1mbo.scoreboard.types.SortOrder;
 
+@Getter
 public class ScoreboardObjective {
 
 	private final Player player;
@@ -16,17 +18,9 @@ public class ScoreboardObjective {
 		this.displayName = displayName;
 	}
 
-	public String getDisplayName() {
-		return this.displayName;
-	}
-
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
 		player.dataPacket(this.getSetObjectivePacket(displayName));
-	}
-
-	public Player getPlayer() {
-		return this.player;
 	}
 
 	public void create() {

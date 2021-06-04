@@ -1,6 +1,7 @@
 package ru.jl1mbo.scoreboard;
 
 import cn.nukkit.Player;
+import lombok.Getter;
 import ru.jl1mbo.scoreboard.line.ScoreboardLine;
 import ru.jl1mbo.scoreboard.manager.ScoreboardManager;
 import ru.jl1mbo.scoreboard.objective.ScoreboardObjective;
@@ -11,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
+@Getter
 public class ScoreboardBuilder {
 
 	private final Map<Integer, ScoreboardLine> scoreboardLines = new HashMap<>();
@@ -27,10 +29,6 @@ public class ScoreboardBuilder {
 		this.scoreboardObjective = new ScoreboardObjective(this.player, displayName);
 		this.scoreboardObjective.setDisplayName(displayName);
 		return this;
-	}
-
-	public ScoreboardObjective getScoreboardObjective() {
-		return this.scoreboardObjective;
 	}
 
 	public ScoreboardBuilder setLine(int index, String text) {
@@ -64,16 +62,8 @@ public class ScoreboardBuilder {
 		return this;
 	}
 
-	public ScoreboardUpdater getScoreboardUpdater() {
-		return this.scoreboardUpdater;
-	}
-
 	public ScoreboardLine getLine(int index) {
 		return this.scoreboardLines.getOrDefault(index, null);
-	}
-
-	public Map<Integer, ScoreboardLine> getLines() {
-		return this.scoreboardLines;
 	}
 
 	public void show() {
@@ -92,9 +82,5 @@ public class ScoreboardBuilder {
 		this.scoreboardObjective.remove();
 		ScoreboardManager.removeScoreboard(this.player);
 		this.scoreboardUpdater.stop();
-	}
-
-	public Player getPlayer() {
-		return this.player;
 	}
 }

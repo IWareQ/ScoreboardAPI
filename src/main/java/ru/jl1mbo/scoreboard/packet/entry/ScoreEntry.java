@@ -7,7 +7,11 @@ public class ScoreEntry {
 			TYPE_ENTITY = 2,
 			TYPE_FAKE_PLAYER = 3;
 
-	public int scoreboardId, score, type, entityUniqueId;
+	public int
+			scoreboardId,
+			score,
+			type,
+			entityUniqueId;
 
 	public String customName;
 
