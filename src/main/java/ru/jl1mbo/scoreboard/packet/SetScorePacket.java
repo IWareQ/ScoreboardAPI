@@ -13,7 +13,7 @@ public class SetScorePacket extends DataPacket {
 			TYPE_REMOVE = 1;
 
 	public byte type;
-	public List<ScoreEntry> entries = new ArrayList<>();
+	public List<ScoreEntry> scoreEntries = new ArrayList<>();
 
 	@Override
 	public byte pid() {
@@ -27,23 +27,23 @@ public class SetScorePacket extends DataPacket {
 	public void encode() {
 		this.reset();
 		this.putByte(this.type);
-		this.putUnsignedVarInt(this.entries.size());
-		for (ScoreEntry entry : this.entries) {
-			this.putVarLong(entry.scoreboardId);
+		this.putUnsignedVarInt(this.scoreEntries.size());
+		for (ScoreEntry scoreEntry : this.scoreEntries) {
+			this.putVarLong(scoreEntry.scoreboardId);
 			this.putString("objective");
-			this.putLInt(entry.score);
+			this.putLInt(scoreEntry.score);
 			if (this.type != TYPE_REMOVE) {
-				this.putByte((byte) entry.type);
-				switch (entry.type) {
+				this.putByte((byte) scoreEntry.type);
+				switch (scoreEntry.type) {
 					case ScoreEntry.TYPE_PLAYER:
 					case ScoreEntry.TYPE_ENTITY:
-						this.putUnsignedVarLong(entry.entityUniqueId);
+						this.putUnsignedVarLong(scoreEntry.entityUniqueId);
 						break;
 					case ScoreEntry.TYPE_FAKE_PLAYER:
-						this.putString(entry.customName);
+						this.putString(scoreEntry.customName);
 						break;
 					default:
-						throw new IllegalArgumentException("Unknown entry " + entry.type);
+						throw new IllegalArgumentException("Неизвестный тип: " + scoreEntry.type);
 				}
 			}
 		}

@@ -24,7 +24,7 @@ public class ScoreboardUpdater extends AsyncTask {
 
 	public ScoreboardBuilder addUpdater(Consumer<ScoreboardBuilder> scoreboardBuilder, int seconds) {
 		if (seconds <= 0) {
-			throw new IllegalArgumentException("Значение задержки должно быть > 0");
+			throw new IllegalArgumentException("Время задержки должно быть > 0");
 		}
 		this.TASKS.put(seconds, scoreboardBuilder);
 		return this.scoreboardBuilder;

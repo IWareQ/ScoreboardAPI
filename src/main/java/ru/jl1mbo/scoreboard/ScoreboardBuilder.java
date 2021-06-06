@@ -35,7 +35,7 @@ public class ScoreboardBuilder {
 		if (index >= 16 || index <= 0) {
 			throw new IllegalArgumentException("Значение индекса должно быть > 0 и < 16");
 		}
-		ScoreboardLine scoreboardLine = this.getLine(index);
+		ScoreboardLine scoreboardLine = this.getScoreboardLine(index);
 		if (scoreboardLine == null) {
 			this.scoreboardLines.put(index, new ScoreboardLine(this, index, text));
 		} else {
@@ -48,11 +48,11 @@ public class ScoreboardBuilder {
 		if (index >= 16 || index <= 0) {
 			throw new IllegalArgumentException("Значение индекса должно быть > 0 и < 16");
 		}
-		ScoreboardLine scoreboardLine = this.getLine(index);
+		ScoreboardLine scoreboardLine = this.getScoreboardLine(index);
 		if (scoreboardLine != null) {
-			scoreboardLine.hideLine();
+			scoreboardLine.hide();
 			this.scoreboardLines.remove(index);
-			scoreboardLine.showLine();
+			scoreboardLine.show();
 		}
 		return this;
 	}
@@ -62,7 +62,7 @@ public class ScoreboardBuilder {
 		return this;
 	}
 
-	public ScoreboardLine getLine(int index) {
+	public ScoreboardLine getScoreboardLine(int index) {
 		return this.scoreboardLines.getOrDefault(index, null);
 	}
 

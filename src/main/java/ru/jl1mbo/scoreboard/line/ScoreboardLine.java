@@ -35,26 +35,26 @@ public class ScoreboardLine {
 	}
 
 	public void refresh() {
-		this.hideLine();
-		this.showLine();
+		this.hide();
+		this.show();
 	}
 
-	public void hideLine() {
+	public void hide() {
 		this.scoreboardBuilder.getPlayer().dataPacket(this.getSetScorePacket(SetScorePacket.TYPE_REMOVE));
 	}
 
-	public void showLine() {
+	public void show() {
 		this.scoreboardBuilder.getPlayer().dataPacket(this.getSetScorePacket(SetScorePacket.TYPE_CHANGE));
 	}
 
 	public DataPacket getSetScorePacket(int type) {
 		SetScorePacket setScorePacket = new SetScorePacket();
 		setScorePacket.type = (byte) type;
-		List<ScoreEntry> entries = new ArrayList<>();
+		List<ScoreEntry> scoreEntries = new ArrayList<>();
 		for (Entry<Integer, ScoreboardLine> entry : this.scoreboardBuilder.getScoreboardLines().entrySet()) {
-			entries.add(new ScoreEntry(entry.getKey(), entry.getKey(), ScoreEntry.TYPE_FAKE_PLAYER, 0, entry.getValue().getText()));
+			scoreEntries.add(new ScoreEntry(entry.getKey(), entry.getKey(), ScoreEntry.TYPE_FAKE_PLAYER, 0, entry.getValue().getText()));
 		}
-		setScorePacket.entries = entries;
+		setScorePacket.scoreEntries = scoreEntries;
 		return setScorePacket;
 	}
 }

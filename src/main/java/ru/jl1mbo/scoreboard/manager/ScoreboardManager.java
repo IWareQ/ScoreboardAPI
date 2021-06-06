@@ -12,10 +12,9 @@ public class ScoreboardManager {
 	@Getter
 	private static final Map<String, ScoreboardBuilder> scoreboards = new HashMap<>();
 
-	public static ScoreboardBuilder createScoreboard(Player player) {
+	public static ScoreboardBuilder newBuilder(Player player) {
 		return new ScoreboardBuilder(player);
 	}
-
 
 	public static ScoreboardBuilder getScoreboard(Player player) {
 		return scoreboards.getOrDefault(player.getName().toLowerCase(), null);
