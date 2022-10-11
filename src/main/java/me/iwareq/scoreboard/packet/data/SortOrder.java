@@ -1,4 +1,4 @@
-package ru.jl1mbo.scoreboard.types;
+package me.iwareq.scoreboard.packet.data;
 
 public enum SortOrder {
 
