@@ -1,22 +1,26 @@
 package me.iwareq.scoreboard.updater;
 
-import cn.nukkit.scheduler.Task;
-import lombok.AllArgsConstructor;
+import cn.nukkit.scheduler.AsyncTask;
 import me.iwareq.scoreboard.Scoreboard;
-import me.iwareq.scoreboard.manager.ScoreboardManager;
 
-@AllArgsConstructor
-public class ScoreboardUpdater extends Task {
+public class ScoreboardUpdater extends AsyncTask {
 
-	private final ScoreboardManager manager;
+	private final Scoreboard scoreboard;
+
+	private int time;
+
+	public ScoreboardUpdater(Scoreboard scoreboard) {
+		this.scoreboard = scoreboard;
+		this.time = scoreboard.getUpdateTime();
+	}
 
 	@Override
-	public void onRun(int currentTick) {
-		for (Scoreboard scoreboard : this.manager.getScoreboards().values()) {
-			int updateTime = scoreboard.getUpdateTime();
-			if (updateTime != 0 && currentTick % updateTime == 0) {
-				scoreboard.refresh();
-			}
+	public void onRun() {
+		this.time--;
+		if (this.time <= 0) {
+			scoreboard.refresh();
+
+			this.time = scoreboard.getUpdateTime();
 		}
 	}
 }

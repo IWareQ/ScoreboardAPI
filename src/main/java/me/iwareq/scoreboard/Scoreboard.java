@@ -1,6 +1,7 @@
 package me.iwareq.scoreboard;
 
 import cn.nukkit.Player;
+import cn.nukkit.Server;
 import lombok.Getter;
 import lombok.ToString;
 import me.iwareq.scoreboard.line.ScoreboardLine;
@@ -11,6 +12,7 @@ import me.iwareq.scoreboard.packet.SetScorePacket;
 import me.iwareq.scoreboard.packet.data.DisplaySlot;
 import me.iwareq.scoreboard.packet.data.ScorerInfo;
 import me.iwareq.scoreboard.packet.data.SortOrder;
+import me.iwareq.scoreboard.updater.ScoreboardUpdater;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -41,6 +43,8 @@ public class Scoreboard {
 		this.callback = callback;
 		this.updateTime = updateTime;
 		this.manager = ScoreboardAPI.getInstance().getScoreboardManager();
+
+		Server.getInstance().getScheduler().scheduleRepeatingTask(new ScoreboardUpdater(this), 20, true);
 	}
 
 	public void setLine(int index, String text) {
@@ -53,18 +57,22 @@ public class Scoreboard {
 	}
 
 	public void addLine(String text) {
-		this.lastIndex++;
+		if (this.lastIndex != 15) {
+			this.lastIndex++;
 
-		this.setLine(this.lastIndex, text);
+			this.setLine(this.lastIndex, text);
+		}
 	}
 
 	private void checkLineIndex(int index) {
 		if (index < 1 || index > 15) {
-			throw new IllegalArgumentException("The line index value should be from 1 to 15");
+			throw new IllegalArgumentException("The line index value should be from 1 to 15, your index: " + index);
 		}
 	}
 
 	public void refresh() {
+		this.lines.clear();
+		this.lastIndex = 0;
 		this.viewers.removeIf(p -> {
 			boolean remove = !p.isConnected() || !p.isOnline();
 			if (remove) {

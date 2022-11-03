@@ -6,7 +6,7 @@
 
 	<groupId>me.iwareq.scoreboard</groupId>
 	<artifactId>ScoreboardAPI</artifactId>
-	<version>2.0</version>
+	<version>2.1</version>
 
 	<properties>
 		<maven.compiler.source>8</maven.compiler.source>
@@ -16,12 +16,12 @@
 	</properties>
 
 	<build>
-		<defaultGoal>clean install</defaultGoal>
+		<defaultGoal>clean package</defaultGoal>
 		<resources>
 			<resource>
 				<targetPath>.</targetPath>
 				<filtering>true</filtering>
-				<directory>${basedir}/src/main/resources/</directory>
+				<directory>${pom.basedir}/src/main/resources/</directory>
 				<includes>
 					<include>plugin.yml</include>
 				</includes>
@@ -50,6 +50,9 @@
 		<repository>
 			<id>opencollab-repo-snapshot</id>
 			<url>https://repo.opencollab.dev/maven-snapshots/</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
 		</repository>
 	</repositories>
 

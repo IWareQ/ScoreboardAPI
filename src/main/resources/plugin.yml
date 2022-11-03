@@ -1,7 +1,6 @@
-name: ScoreboardAPI
-main: me.iwareq.scoreboard.ScoreboardAPI
+name: "ScoreboardAPI"
+main: "me.iwareq.scoreboard.ScoreboardAPI"
 version: "${pom.version}"
-api: 1.0.13
-load: STARTUP
-author: IWareQ
-website: https://github.com/IWareQ/ScoreboardAPI
+api: "1.0.13"
+load: "STARTUP"
+author: "IWareQ"
