@@ -19,6 +19,8 @@ Scoreboard scoreboard = new Scoreboard("Test Scoreboard", (sb, player) -> {
     sb.addLine("§2"); // used for skip line
     sb.addLine("Online: " + Server.getInstance().getOnlinePlayers().size());
 }, 2); // in seconds
+
+scoreboard.show(player);
 ```
 
 ## Maven
