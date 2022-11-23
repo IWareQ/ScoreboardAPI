@@ -4,19 +4,19 @@ import cn.nukkit.Player;
 import lombok.Getter;
 import me.iwareq.scoreboard.Scoreboard;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ScoreboardManager {
 
 	@Getter
-	private final Map<String, Scoreboard> scoreboards = new HashMap<>();
+	private final Map<String, Scoreboard> scoreboards = new ConcurrentHashMap<>();
 
 	public Scoreboard getScoreboard(Player player) {
 		return this.scoreboards.get(player.getName());
 	}
 
-	public void addScoreboard(Player player, Scoreboard scoreboard) {
+	public void setScoreboard(Player player, Scoreboard scoreboard) {
 		this.scoreboards.put(player.getName(), scoreboard);
 	}
 

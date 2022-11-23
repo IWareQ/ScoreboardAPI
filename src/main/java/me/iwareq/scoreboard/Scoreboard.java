@@ -3,7 +3,6 @@ package me.iwareq.scoreboard;
 import cn.nukkit.Player;
 import cn.nukkit.Server;
 import lombok.Getter;
-import lombok.ToString;
 import me.iwareq.scoreboard.line.ScoreboardLine;
 import me.iwareq.scoreboard.manager.ScoreboardManager;
 import me.iwareq.scoreboard.packet.RemoveObjectivePacket;
@@ -20,31 +19,24 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.BiConsumer;
 
-@ToString
 public class Scoreboard {
+
+	private final String displayName;
+	private final BiConsumer<Scoreboard, Player> callback;
+	private final ScoreboardManager manager;
 
 	@Getter
 	private final Set<Player> viewers = new HashSet<>();
-
-	private final String displayName;
-
 	private final Map<Integer, ScoreboardLine> lines = new HashMap<>();
-
-	private final BiConsumer<Scoreboard, Player> callback;
-
-	private final ScoreboardManager manager;
-	@Getter
-	private final int updateTime;
 
 	private int lastIndex;
 
 	public Scoreboard(String displayName, BiConsumer<Scoreboard, Player> callback, int updateTime) {
 		this.displayName = displayName;
 		this.callback = callback;
-		this.updateTime = updateTime;
 		this.manager = ScoreboardAPI.getInstance().getScoreboardManager();
 
-		Server.getInstance().getScheduler().scheduleRepeatingTask(new ScoreboardUpdater(this), 20, true);
+		Server.getInstance().getScheduler().scheduleRepeatingTask(new ScoreboardUpdater(this), updateTime, true);
 	}
 
 	public void setLine(int index, String text) {
@@ -73,18 +65,18 @@ public class Scoreboard {
 	public void refresh() {
 		this.lines.clear();
 		this.lastIndex = 0;
-		this.viewers.removeIf(p -> {
-			boolean remove = !p.isConnected() || !p.isOnline();
+		this.viewers.removeIf(viewer -> {
+			boolean remove = !viewer.isConnected() || !viewer.isOnline();
 			if (remove) {
-				this.manager.removeScoreboard(p);
+				this.manager.removeScoreboard(viewer);
 			}
 
 			return remove;
 		});
 
-		this.viewers.forEach(player -> {
-			this.hide(player, false);
-			this.show(player, false);
+		this.viewers.forEach(viewer -> {
+			this.hide(viewer, false);
+			this.show(viewer, false);
 		});
 	}
 
@@ -112,7 +104,7 @@ public class Scoreboard {
 			player.dataPacket(scorePacket);
 
 			if (add) {
-				this.manager.addScoreboard(player, this);
+				this.manager.setScoreboard(player, this);
 			}
 		}
 	}

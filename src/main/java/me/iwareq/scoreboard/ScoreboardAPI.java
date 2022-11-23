@@ -8,6 +8,7 @@ public class ScoreboardAPI extends PluginBase {
 
 	@Getter
 	private static ScoreboardAPI instance;
+
 	@Getter
 	private ScoreboardManager scoreboardManager;
 
