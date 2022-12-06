@@ -8,17 +8,18 @@ your custom scoreboards with ease.
 ## Usage
 
 ```java
-Scoreboard scoreboard = new Scoreboard("Test Scoreboard", (sb, player) -> {
-    sb.addLine(player.getName());
-    sb.addLine("§1"); // used for skip line
-    sb.addLine("random: " + Math.random());
-    sb.addLine("random: " + Math.random());
-    sb.addLine("random: " + Math.random());
-    sb.addLine("random: " + Math.random());
-    sb.addLine("random: " + Math.random());
-    sb.addLine("§2"); // used for skip line
-    sb.addLine("Online: " + Server.getInstance().getOnlinePlayers().size());
-}, 2); // in seconds
+Scoreboard scoreboard = new Scoreboard("Test Scoreboard", DisplaySlot.SIDEBAR, 20); // update time in ticks (20 ticks = 1 second)
+scoreboard.setHandler(pl -> {
+    scoreboard.addLine(pl.getName());
+    scoreboard.addLine("§1"); // used for skip line
+    scoreboard.addLine("random: " + Math.random());
+    scoreboard.addLine("random: " + Math.random());
+    scoreboard.addLine("random: " + Math.random());
+    scoreboard.addLine("random: " + Math.random());
+    scoreboard.addLine("random: " + Math.random());
+    scoreboard.addLine("§2"); // used for skip line
+    scoreboard.addLine("Online: " + Server.getInstance().getOnlinePlayers().size());
+});
 
 scoreboard.show(player);
 ```
