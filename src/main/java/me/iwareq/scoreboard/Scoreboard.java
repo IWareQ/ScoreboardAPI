@@ -17,26 +17,31 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 public class Scoreboard {
 
 	private final String displayName;
-	private final BiConsumer<Scoreboard, Player> callback;
+	private final DisplaySlot displaySlot;
 	private final ScoreboardManager manager;
 
 	@Getter
 	private final Set<Player> viewers = new HashSet<>();
 	private final Map<Integer, ScoreboardLine> lines = new HashMap<>();
 
+	private Consumer<Player> consumer = (p) -> {};
 	private int lastIndex;
 
-	public Scoreboard(String displayName, BiConsumer<Scoreboard, Player> callback, int updateTime) {
+	public Scoreboard(String displayName, DisplaySlot displaySlot, int updateTime) {
 		this.displayName = displayName;
-		this.callback = callback;
+		this.displaySlot = displaySlot;
 		this.manager = ScoreboardAPI.getInstance().getScoreboardManager();
 
 		Server.getInstance().getScheduler().scheduleRepeatingTask(new ScoreboardUpdater(this), updateTime, true);
+	}
+
+	public void setHandler(Consumer<Player> consumer) {
+		this.consumer = consumer;
 	}
 
 	public void setLine(int index, String text) {
@@ -86,12 +91,13 @@ public class Scoreboard {
 
 	private void show(Player player, boolean add) {
 		if (!add || this.viewers.add(player)) {
-			this.callback.accept(this, player);
+			this.consumer.accept(player);
 
 			SetDisplayObjectivePacket objectivePacket = new SetDisplayObjectivePacket();
-			objectivePacket.setDisplaySlot(DisplaySlot.SIDEBAR);
+			objectivePacket.setDisplaySlot(this.displaySlot);
 			objectivePacket.setObjectiveId("objective");
 			objectivePacket.setDisplayName(this.displayName);
+			// dummy is the only criterion supported. As such, score can only be changed by commands.
 			objectivePacket.setCriteria("dummy");
 			objectivePacket.setSortOrder(SortOrder.ASCENDING);
 
@@ -99,7 +105,10 @@ public class Scoreboard {
 
 			SetScorePacket scorePacket = new SetScorePacket(SetScorePacket.Action.SET);
 			this.lines.forEach((index, line) ->
-					scorePacket.getInfos().add(new ScorerInfo(index, "objective", index, line.getText())));
+					scorePacket.getInfos().add(
+							new ScorerInfo(index, "objective", index, line.getText())
+					)
+			);
 
 			player.dataPacket(scorePacket);
 
