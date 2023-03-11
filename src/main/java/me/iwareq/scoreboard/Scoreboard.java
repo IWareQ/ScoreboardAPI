@@ -29,15 +29,21 @@ public class Scoreboard {
 	private final Set<Player> viewers = new HashSet<>();
 	private final Map<Integer, ScoreboardLine> lines = new HashMap<>();
 
-	private Consumer<Player> consumer = (p) -> {};
+	private Consumer<Player> consumer = p -> {};
 	private int lastIndex;
+
+	public Scoreboard(String displayName, DisplaySlot displaySlot) {
+		this(displayName, displaySlot, Integer.MIN_VALUE);
+	}
 
 	public Scoreboard(String displayName, DisplaySlot displaySlot, int updateTime) {
 		this.displayName = displayName;
 		this.displaySlot = displaySlot;
 		this.manager = ScoreboardAPI.getInstance().getScoreboardManager();
 
-		Server.getInstance().getScheduler().scheduleRepeatingTask(new ScoreboardUpdater(this), updateTime, true);
+		if (updateTime != Integer.MIN_VALUE) {
+			Server.getInstance().getScheduler().scheduleRepeatingTask(new ScoreboardUpdater(this), updateTime, true);
+		}
 	}
 
 	public void setHandler(Consumer<Player> consumer) {
@@ -54,11 +60,9 @@ public class Scoreboard {
 	}
 
 	public void addLine(String text) {
-		if (this.lastIndex != 15) {
-			this.lastIndex++;
+		this.lastIndex++;
 
-			this.setLine(this.lastIndex, text);
-		}
+		this.setLine(this.lastIndex, text);
 	}
 
 	private void checkLineIndex(int index) {
@@ -71,12 +75,12 @@ public class Scoreboard {
 		this.lines.clear();
 		this.lastIndex = 0;
 		this.viewers.removeIf(viewer -> {
-			boolean remove = !viewer.isConnected() || !viewer.isOnline();
-			if (remove) {
+			boolean canBeRemoved = !viewer.isConnected() || !viewer.isOnline();
+			if (canBeRemoved) {
 				this.manager.removeScoreboard(viewer);
 			}
 
-			return remove;
+			return canBeRemoved;
 		});
 
 		this.viewers.forEach(viewer -> {

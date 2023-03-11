@@ -8,7 +8,8 @@ your custom scoreboards with ease.
 ## Usage
 
 ```java
-Scoreboard scoreboard = new Scoreboard("Test Scoreboard", DisplaySlot.SIDEBAR, 20); // update time in ticks (20 ticks = 1 second)
+Scoreboard scoreboard = new Scoreboard("Test Scoreboard", DisplaySlot.SIDEBAR, 20);
+// Update time in ticks (20 ticks = 1 second) or skip this option to disable automatic updates
 scoreboard.setHandler(pl -> {
     scoreboard.addLine(pl.getName());
     scoreboard.addLine("§1"); // used for skip line
