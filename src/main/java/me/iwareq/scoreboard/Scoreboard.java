@@ -75,7 +75,7 @@ public class Scoreboard {
 		this.lines.clear();
 		this.lastIndex = 0;
 		this.viewers.removeIf(viewer -> {
-			boolean canBeRemoved = !viewer.isConnected() || !viewer.isOnline();
+			boolean canBeRemoved = !viewer.isOnline();
 			if (canBeRemoved) {
 				this.manager.removeScoreboard(viewer);
 			}
